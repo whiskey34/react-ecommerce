@@ -19,7 +19,7 @@ function Cart() {
 
     const paymentCheckout = async () => {
         try {
-        const response = await axios.post("http://bitshop-server.vercel.app/api/create-checkout-session", {
+        const response = await axios.post("https://bitshop-server.vercel.app/api/create-checkout-session", {
             items,  // [{ name, price, quantity }]
             total,
         });
