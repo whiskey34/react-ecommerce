@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import reactLogo from '../assets/react.svg'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { auth } from "../firebase/firebaseConfig";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import type { User } from "firebase/auth";
@@ -20,6 +20,7 @@ function Navbar() {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -33,7 +34,11 @@ function Navbar() {
         navigate("/login");
     };
 
-
+    // helper to check active menu
+    const isActive = (path: string) =>
+        location.pathname === path
+        ? "text-cyan-700 dark:text-white "
+        : "text-gray-700 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-white";
     
 
   return (
@@ -67,7 +72,7 @@ function Navbar() {
                         Log in
                         </Link>
                     ) : (
-                        <div className="relative">
+                        <div className="relative hidden lg:block">
                         <button
                             onClick={() => setDropdownOpen((prev) => !prev)}
                             className="flex items-center focus:outline-none"
@@ -146,12 +151,11 @@ function Navbar() {
                     <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                         <li>
                             <Link to="/"
-                                className="block py-2 pl-3 pr-4 text-white font-mono bg-cyan-700 rounded lg:bg-transparent lg:text-cyan-700 lg:p-0 dark:text-white"
-                                aria-current="page">Home</Link>
+                                className={`block py-2 pl-3 pr-4 font-mono lg:p-0 ${isActive("/")}`}>Home</Link>
                         </li>
                         <li>
                             <Link to="/product"
-                                className="block py-2 pl-3 pr-4 text-gray-700 font-mono border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-cyan-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Products</Link>
+                                className={`block py-2 pl-3 pr-4 font-mono lg:p-0 ${isActive("/product")}`}>Products</Link>
                         </li>
 
                         {/* Mobile-only login button */}
